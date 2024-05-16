@@ -47,10 +47,13 @@ setup() {
 
     assert_consent "Add Microsoft as a trusted package signer?" ${global_consent}
     set -v
-    mkdir -p /etc/apt/keyrings
-    curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
-      gpg --batch --dearmor -o /etc/apt/keyrings/microsoft.gpg
-    chmod go+r /etc/apt/keyrings/microsoft.gpg
+    if [ ! -f "/etc/apt/keyrings/microsoft.gpg" ]; then
+        mkdir -p /etc/apt/keyrings
+        curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
+            gpg --batch --dearmor -o /etc/apt/keyrings/microsoft.gpg
+        chmod go+r /etc/apt/keyrings/microsoft.gpg
+    fi
+    
     set +v
 
     assert_consent "Add the Azure CLI Repository to your apt sources?" ${global_consent}
